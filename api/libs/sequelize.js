@@ -10,16 +10,16 @@ const PASSWORD = encodeURIComponent(config.dbPassword); //proteger la contraseñ
 const URI = `postgres://${USER}:${PASSWORD}@${config.dbHost}:${config.dbPort}/${config.dbName}`; //esto por si la bd es una url de conexión, puede que sea una bd de azure, aws, etc.
 
 //se usará la estrategia de polling
-// const sequelize = new Sequelize(URI, {
-//   delect: 'postgres',
-//   logging: true
-// });
-
-//vamos a cambiar la URI, por la conexión a la dbUrl para que use el que nos pide fly.io
-const sequelize = new Sequelize(config.dbUrl, {
+const sequelize = new Sequelize(URI, {
   delect: 'postgres',
   logging: true
 });
+
+//vamos a cambiar la URI, por la conexión a la dbUrl para que use el que nos pide fly.io
+// const sequelize = new Sequelize(config.dbUrl, {
+//   delect: 'postgres',
+//   logging: true
+// });
 
 
 setupModels(sequelize); //enviamos la conexión
