@@ -1,0 +1,21 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=my_store
+      - POSTGRES_USER=oveja
+      - POSTGRES_PASSWORD=9803
+    ports:
+      - 5432:5432
+    volumes:
+      - ./api/postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image : dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=ovejatzaypuac03@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=9803
+    ports:
+      - 5050:80

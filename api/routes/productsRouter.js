@@ -2,16 +2,22 @@ const express = require('express');
 
 const ProductsService= require(('./../services/product.service'));
 const validatorHandler= require(('./../middlewares/validator.handler'));
-const {createProductSchema, updateProductSchema, getProductSchema}= require(('./../schemas/product.shcema'));
+const {createProductSchema, updateProductSchema, getProductSchema, queryProductSchema}= require(('./../schemas/product.shcema'));
 
 //al no tener acceso a la aplicación, creamos un routing propio
 const router = express.Router();
 const service = new ProductsService();
 
 // endpoint para productos
-router.get('/', async (req, res)=>{
-  const products = await service.find();
-  res.json(products);
+router.get('/',
+  validatorHandler(queryProductSchema, 'query'),
+  async (req, res, next)=>{
+    try {
+      const products = await service.find(req.query);
+      res.json(products);
+    } catch (error) {
+      next(error);
+    }
 })
 
 
@@ -37,10 +43,14 @@ router.get('/:id',
 // endpoint para post
 router.post('/',
   validatorHandler(createProductSchema, 'body'),
-  async (req, res)=>{
-    const body = req.body;
-    const newProduct = await service.create(body);
-    res.status(201).json(newProduct);
+  async (req, res, next)=>{
+    try {
+      const body = req.body;
+      const newProduct = await service.create(body);
+      res.status(201).json(newProduct);
+    } catch (error) {
+      next(error);
+    }
   }
 );
 

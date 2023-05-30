@@ -2,19 +2,27 @@ const express = require('express');
 
 const CategoriesService = require('./../services/category.service');
 //al no tener acceso a la aplicación, creamos un routing propio
+const validatorHandler = require('./../middlewares/validator.handler');
+const { createCategorySchema, updateCategorySchema, getCategorySchema } = require('./../schemas/category.schema');
+
+
 const router = express.Router();
 const service = new CategoriesService();
 
 // endpoint para categorias
-router.get('/', (req, res)=>{
-  const categories = service.find();
-  res.json(categories);
+router.get('/', async (req, res, next)=>{
+  try {
+    const categories = await service.find();
+    res.json(categories);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // endpoint para una categoria en especifico
-router.get('/:id',(req,res)=>{
+router.get('/:id',async (req,res)=>{
   const {id}=req.params;
-  const category = service.findOne(id);
+  const category = await service.findOne(id);
   res.json(category);
 });
 
@@ -28,25 +36,30 @@ router.get('/:categorieId/products/:productId',(req, res)=>{
 })
 
 // endpoint para post
-router.post('/',(req, res)=>{
-  const body = req.body;
-  const newCategory = service.create(body);
-  res.status(201).json(newCategory);
+router.post('/',validatorHandler(createCategorySchema, 'body'),
+  async (req, res, next)=>{
+    try {
+      const body = req.body;
+      const newCategory = await service.create(body);
+      res.status(201).json(newCategory);
+    } catch (error) {
+      next(error);
+    }
 })
 
 // endpoint para patch, actualización parcial
-router.patch('/:id',(req, res)=>{
+router.patch('/:id',async (req, res)=>{
   const {id} = req.params;
   const body = req.body;
-  const category = service.update(id, body);
+  const category = await service.update(id, body);
   res.json(category);
 })
 
 // endpoint para delete
-router.delete('/:id', (req, res)=>{
+router.delete('/:id', async (req, res)=>{
   const {id} = req.params;
 
-  const rta = service.delete(id);
+  const rta = await service.delete(id);
   res.json(rta);
 })
 

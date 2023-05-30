@@ -1,38 +1,47 @@
-const {faker}= require('@faker-js/faker');
+// const {faker}= require('@faker-js/faker');
+const boom = require('@hapi/boom');
+const {models} = require('./../libs/sequelize');
 
 class CategoriesService{
 
   constructor(){
-    this.categories = [];
-    this.generate();
+    // this.categories = [];
+    // this.generate();
   }
 
-  generate(){
-    const limit = 10;
-    for (let i = 0; i < limit; i++) {
-      this.categories.push({
-        id: faker.datatype.uuid(),
-        category: faker.commerce.productAdjective()
-      });
-    }
-  }
+  // generate(){
+  //   const limit = 10;
+  //   for (let i = 0; i < limit; i++) {
+  //     this.categories.push({
+  //       id: faker.datatype.uuid(),
+  //       category: faker.commerce.productAdjective()
+  //     });
+  //   }
+  // }
+
+
   // lógica para crear un producto
-  create(data){
-    const newCategory = {
-      id: faker.datatype.uuid(),
-      ...data
-    }
-    this.categories.push(newCategory);
+  async create(data){
+    const newCategory = await models.Category.create(data);
     return newCategory;
   }
   // lógica find para mostrar categorias
-  find(){
-    return this.categories;
+  async find(){
+    const rpta = await models.Category.findAll();
+    return rpta;
   }
   // lógica find para mostrar un solo producto
-  findOne(id){
-    return this.categories.find(item => item.id === id);
+  async findOne(id){
+    const category = await models.Category.findByPk(id,{
+      include: ['products']
+    });
+
+    if(!category){
+      throw boom.notFound('category not found');
+    }
+    return category;
   }
+
   // lógica para actualizar
   update(id, changes){
     const index = this.categories.findIndex(item => item.id === id);

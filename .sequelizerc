@@ -1,0 +1,8 @@
+// formato de javascript
+
+module.exports ={
+  'config': './api/bd/config.js', //donde encontrar la config, cual es la conexiona a la bd, el cli tendrá su propia conexión independiente del que ya está
+  'models-path': './api/bd/models/', //donde estan los modelos
+  'migrations-path': './api/bd/migrations/', //donde están las migraciones
+  'seeders-path': './api/bd/seeders/', //semillas de información, para test
+}
