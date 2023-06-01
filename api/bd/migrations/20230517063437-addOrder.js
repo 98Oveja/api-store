@@ -32,7 +32,7 @@ module.exports = {
         type: DataTypes.DATE,
         field: 'created_at',
         defaultValue: Sequelize.NOW,
-      }
+      },
     });
   },
 
