@@ -56,8 +56,8 @@ class Product extends Model{
   static config(sequelize){
     return {
       sequelize,
-      tablename: PRODUCT_TABLE,
-      modelname: 'Product',
+      tableName: PRODUCT_TABLE,
+      modelName: 'Product',
       timestamps: false
     }
   }
