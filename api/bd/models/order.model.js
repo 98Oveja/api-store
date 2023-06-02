@@ -33,12 +33,14 @@ const OrderSchema = {
     type: DataTypes.VIRTUAL,
     get(){
       // items, manera en la que hayamos llamado a nuestra asociación
-      if(this.items.length > 0){
-        return this.items.reduce((total, item)=>{
-          return total+ (item.price * item.OrderProduct.amount);
-        },0);
+      if( (typeof this.items) !== 'undefined'){
+        if(this.items.length > 0){
+          return this.items.reduce((total, item)=>{
+            return total+ (item.price * item.OrderProduct.amount);
+          },0);
+        }
       }
-      return 0;
+      // return 0;
     }
   }
 }
